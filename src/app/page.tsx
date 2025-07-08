@@ -134,7 +134,7 @@ export default function Home() {
                   <div className="relative mb-6">
                     <MediaRenderer
                       client={client}
-                      src='https://ipfs.io/ipfs/bafybeihzolagfn3oageopwetdrmienm42xyxku7mnh4fg6wcgvdkhw7ofu"
+                      src="https://ipfs.io/ipfs/bafybeihzolagfn3oageopwetdrmienm42xyxku7mnh4fg6wcgvdkhw7ofu"
                       className="rounded-2xl shadow-2xl w-48 h-48 object-cover border-4 border-purple-300/30"
                     />
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-purple-900/30 to-transparent"></div>
