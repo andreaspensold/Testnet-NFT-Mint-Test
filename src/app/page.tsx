@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ConnectButton, MediaRenderer, useReadContract, useSendTransaction, useActiveAccount } from "thirdweb/react";
 import { client } from "./client";
 import { defineChain, getContract, toEther } from "thirdweb";
+import { createWallet } from "thirdweb/wallets";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { 
   getActiveClaimCondition, 
@@ -15,7 +16,12 @@ import {
 import { useState } from "react";
 
 // Reference image directly from public folder
-const thirdwebIcon = "/pindoralogo.png";
+const pindoraIcon = "/pindoralogo.png";
+const backgroundIcon = "/mintbackground.jpeg";
+const collectionIcon = "/LUCIAdevice.png";
+
+// Create wallets array with MetaMask
+const wallets = [createWallet("io.metamask")];
 
 export default function Home() {
   const [mintStatus, setMintStatus] = useState("");
@@ -95,7 +101,7 @@ export default function Home() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('https://ipfs.io/ipfs/bafkreiabqzyykqml2jxqjhqop3jekrrrl7x2norn5ptbd2bbvgl7kcva4e')`,
+          backgroundImage: `url('${backgroundIcon}')`,
           opacity: 0.7
         }}
       />
@@ -134,7 +140,7 @@ export default function Home() {
                   <div className="relative mb-6">
                     <MediaRenderer
                       client={client}
-                      src="https://ipfs.io/ipfs/bafybeihzolagfn3oageopwetdrmienm42xyxku7mnh4fg6wcgvdkhw7ofu"
+                      src={collectionIcon}
                       className="rounded-2xl shadow-2xl w-48 h-48 object-cover border-4 border-purple-300/30"
                     />
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-purple-900/30 to-transparent"></div>
@@ -227,11 +233,16 @@ export default function Home() {
             )}
           </div>
 
-          {/* Connect Button - Dark Pindora styling */}
+          {/* Connect Button - Updated with new configuration */}
           <div className="backdrop-blur-md bg-gradient-to-r from-purple-800/30 to-orange-700/30 border border-purple-400/40 rounded-2xl p-4">
             <ConnectButton
               client={client}
               chain={chain}
+              wallets={wallets}
+              connectModal={{ 
+                showThirdwebBranding: false, 
+                size: "compact" 
+              }}
             />
           </div>
         </div>
@@ -245,7 +256,7 @@ function Header() {
     <header className="flex flex-col items-center text-center mb-8">
       <div className="relative mb-6">
         <Image
-          src={thirdwebIcon}
+          src={pindoraIcon}
           alt="Pindora Logo"
           width={120}
           height={120}
