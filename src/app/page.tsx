@@ -8,9 +8,6 @@ import { createWallet } from "thirdweb/wallets";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { 
   getActiveClaimCondition, 
-  getTotalClaimedSupply, 
-  nextTokenIdToMint, 
-  totalSupply,
   claimTo
 } from "thirdweb/extensions/erc721";
 import { useState } from "react";
@@ -18,7 +15,7 @@ import { useState } from "react";
 // Reference image directly from public folder
 const pindoraIcon = "/pindoralogo.png";
 const backgroundIcon = "/mintbackground.jpeg";
-const collectionIcon = "/LUCIAdevice.png";
+const collectionIcon = "/SSSF.png";
 
 // Create wallets array with MetaMask
 const wallets = [createWallet("io.metamask")];
@@ -43,21 +40,11 @@ export default function Home() {
   const contract = getContract({
     client: client,
     chain: chain,
-    address: "0xCf14Fe52866c028Ca3869687265bc227422A2658"
+    address: "0x82893160aD68d654621c8116C6FeD87Ff26AE8cB"
   });
 
   const { data: contractMetadata, isLoading: isContractMetadataLoading } = useReadContract(
     getContractMetadata,
-    { contract: contract }
-  );
-
-  const { data: claimedSupply, isLoading: isClaimedSupplyLoading } = useReadContract(
-    getTotalClaimedSupply,
-    { contract: contract }
-  );
-
-  const { data: totalNFTSupply, isLoading: isTotalSupplyLoading } = useReadContract(
-    nextTokenIdToMint,
     { contract: contract }
   );
 
@@ -85,7 +72,7 @@ export default function Home() {
 
     sendTransaction(transaction, {
       onSuccess: (result) => {
-        setMintStatus("Successfully minted 1 NFT!");
+        setMintStatus("Successfully minted your Signal ID");
         console.log("Mint transaction:", result);
       },
       onError: (error) => {
@@ -150,28 +137,12 @@ export default function Home() {
                   </h2>
                 </>
               )}
-              
-              {isClaimedSupplyLoading || isTotalSupplyLoading ? (
-                <div className="flex items-center gap-3 text-purple-100">
-                  <div className="w-5 h-5 border-2 border-purple-300/30 border-t-purple-300 rounded-full animate-spin"></div>
-                  <p>Loading supply data...</p>
-                </div>
-              ) : (
-                <div className="bg-gradient-to-r from-purple-600/40 to-orange-500/40 backdrop-blur-sm rounded-xl px-6 py-3 border border-purple-400/40">
-                  <p className="text-xl font-bold text-white text-center">
-                    <span className="text-orange-300">{claimedSupply?.toString()}</span>
-                    <span className="text-purple-200/60 mx-2">/</span>
-                    <span className="text-purple-300">{totalNFTSupply?.toString()}</span>
-                    <span className="text-white/80 ml-2">NFTs Minted</span>
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* Mint Section - Dark Pindora Purple/Orange theme */}
             <div className="bg-gradient-to-br from-purple-800/30 to-orange-700/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-200 to-orange-200 bg-clip-text text-transparent mb-6 text-center">
-                Mint Your LUCIA NFT
+              <h3 className="text-xl font-bold bg-gradient-to-r from-purple-200 to-orange-200 bg-clip-text text-transparent mb-6 text-center">
+                Connect your whitelisted Metamask wallet.
               </h3>
               
               {claimCondition ? (
@@ -196,12 +167,12 @@ export default function Home() {
                     {isMinting ? (
                       <span className="flex items-center justify-center gap-3">
                         <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        Minting Your LUCIA NFT...
+                        Minting Your Sovereign Signal ID...
                       </span>
                     ) : !account ? (
                       'Connect Wallet to Mint'
                     ) : (
-                      '🚀 Mint LUCIA NFT'
+                      '🚀 Mint Your Sovereign Signal ID'
                     )}
                   </button>
                 </>
@@ -268,16 +239,16 @@ function Header() {
         <div className="absolute inset-0 rounded-full bg-gradient-to-t from-purple-600/30 to-orange-400/15"></div>
       </div>
       
-      <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-300 via-violet-200 to-orange-300 bg-clip-text text-transparent mb-3">
-        LUCIA NFT COLLECTION
+      <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-300 via-violet-200 to-orange-300 bg-clip-text text-transparent mb-3 leading-tight pb-2">
+        Sovereign Signal ID Mint
       </h1>
       
-      <p className="text-purple-100/90 text-lg font-medium max-w-md mb-2">
-        Mint your exclusive LUCIA NFT on Pindora Testnet
+      <p className="text-purple-100/90 text-lg font-medium max-w-md mb-3">
+        Claim your whitelist key. Prove you were first.
       </p>
       
       <p className="text-orange-200/80 text-sm font-light max-w-lg">
-        Stay Sovereign, Stay Free!
+        Mint access is restricted to Verified Signal role holders.
       </p>
       
       {/* Decorative elements - Pindora brand colors */}
