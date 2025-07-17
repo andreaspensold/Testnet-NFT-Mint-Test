@@ -54,7 +54,7 @@ export default function Home() {
   );
 
   // Enhanced error message parsing function
-  const parseErrorMessage = (error) => {
+  const parseErrorMessage = (error: any) => {
     const errorMessage = error.message || error.toString();
     
     // Check for specific error patterns
