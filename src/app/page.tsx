@@ -40,7 +40,7 @@ export default function Home() {
   const contract = getContract({
     client: client,
     chain: chain,
-    address: "0x82893160aD68d654621c8116C6FeD87Ff26AE8cB"
+    address: "0x400F8432253A7CaF458062c4C2632230c83B8e73"
   });
 
   const { data: contractMetadata, isLoading: isContractMetadataLoading } = useReadContract(
@@ -53,7 +53,52 @@ export default function Home() {
     { contract: contract }
   );
 
-  // Mint functionality
+  // Enhanced error message parsing function
+  const parseErrorMessage = (error) => {
+    const errorMessage = error.message || error.toString();
+    
+    // Check for specific error patterns
+    if (errorMessage.includes("DropClaimExceedLimit")) {
+      return "❌ Wallet not eligible: You either already minted your Signal ID or are not on the whitelist.";
+    }
+    
+    if (errorMessage.includes("ClaimConditionNotMet")) {
+      return "❌ Claim condition not met: Please ensure you meet all requirements to mint.";
+    }
+    
+    if (errorMessage.includes("InsufficientBalance") || errorMessage.includes("insufficient funds")) {
+      return "❌ Insufficient LUCIA balance: You need more LUCIA tokens to complete the mint.";
+    }
+    
+    if (errorMessage.includes("NotInAllowlist") || errorMessage.includes("not allowed")) {
+      return "❌ Not whitelisted: Your wallet is not on the Verified Signal role holders list.";
+    }
+    
+    if (errorMessage.includes("MaxQuantityPerTransactionExceeded")) {
+      return "❌ Too many requested: You can only mint one Signal ID per transaction.";
+    }
+    
+    if (errorMessage.includes("ClaimPeriodEnded") || errorMessage.includes("claim ended")) {
+      return "❌ Mint period ended: The minting period has concluded.";
+    }
+    
+    if (errorMessage.includes("ClaimPeriodNotStarted") || errorMessage.includes("not started")) {
+      return "❌ Mint not started: The minting period hasn't begun yet.";
+    }
+    
+    if (errorMessage.includes("rejected") || errorMessage.includes("denied")) {
+      return "❌ Transaction rejected: You declined the transaction in your wallet.";
+    }
+    
+    if (errorMessage.includes("network") || errorMessage.includes("RPC")) {
+      return "❌ Network error: Please check your connection and try again.";
+    }
+    
+    // Generic fallback with cleaner message
+    return "❌ Minting failed: Please ensure you're whitelisted and haven't already minted. Contact support if the issue persists.";
+  };
+
+  // Mint functionality with enhanced error handling
   const { mutate: sendTransaction, isPending: isMinting } = useSendTransaction();
 
   const mintNFT = () => {
@@ -72,11 +117,12 @@ export default function Home() {
 
     sendTransaction(transaction, {
       onSuccess: (result) => {
-        setMintStatus("Successfully minted your Signal ID");
+        setMintStatus("✅ Successfully minted your Sovereign Signal ID! Welcome to the exclusive club.");
         console.log("Mint transaction:", result);
       },
       onError: (error) => {
-        setMintStatus("Minting failed: " + error.message);
+        const friendlyMessage = parseErrorMessage(error);
+        setMintStatus(friendlyMessage);
         console.error("Mint error:", error);
       },
     });
@@ -186,14 +232,14 @@ export default function Home() {
               )}
             </div>
 
-            {/* Mint Status - Pindora themed */}
+            {/* Enhanced Mint Status - Better visual feedback */}
             {mintStatus && (
               <div className="mt-6 text-center">
                 <div className={`
-                  inline-block px-6 py-3 rounded-xl font-bold text-lg backdrop-blur-sm border
-                  ${mintStatus.includes('Successfully') 
-                    ? 'bg-orange-500/20 border-orange-400/50 text-orange-200' 
-                    : mintStatus.includes('failed')
+                  inline-block px-6 py-4 rounded-xl font-bold text-sm backdrop-blur-sm border max-w-md
+                  ${mintStatus.includes('✅') || mintStatus.includes('Successfully') 
+                    ? 'bg-green-500/20 border-green-400/50 text-green-200' 
+                    : mintStatus.includes('❌') || mintStatus.includes('failed') || mintStatus.includes('not eligible')
                     ? 'bg-red-500/20 border-red-400/50 text-red-300'
                     : 'bg-purple-500/20 border-purple-400/50 text-purple-200'
                   }
@@ -202,6 +248,13 @@ export default function Home() {
                 </div>
               </div>
             )}
+
+            {/* Additional Help Text for Whitelist Issues */}
+            <div className="mt-4 text-center">
+              <p className="text-purple-200/70 text-sm">
+                Having trouble? Ensure you have the <span className="text-orange-300 font-semibold">Verified Signal</span> role in Discord.
+              </p>
+            </div>
           </div>
 
           {/* Connect Button - Updated with new configuration */}
