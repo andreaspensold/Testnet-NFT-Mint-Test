@@ -17,8 +17,18 @@ const pindoraIcon = "/pindoralogo.png";
 const backgroundIcon = "/mintbackground.jpeg";
 const collectionIcon = "/SSSF.png";
 
-// Create wallets array with MetaMask
-const wallets = [createWallet("io.metamask")];
+// Create wallets array with multiple supported wallets
+const wallets = [
+  createWallet("io.metamask"),              // MetaMask
+  createWallet("walletConnect"),            // WalletConnect (supports many mobile wallets)
+  createWallet("com.coinbase.wallet"),      // Coinbase Wallet
+  createWallet("com.trustwallet.app"),      // Trust Wallet
+  createWallet("me.rainbow"),               // Rainbow Wallet
+  createWallet("app.phantom"),              // Phantom Wallet
+  createWallet("io.rabby"),                 // Rabby Wallet
+  createWallet("io.zerion.wallet"),         // Zerion Wallet
+  createWallet("com.brave.wallet"),         // Brave Wallet
+];
 
 export default function Home() {
   const [mintStatus, setMintStatus] = useState("");
@@ -188,7 +198,7 @@ export default function Home() {
             {/* Mint Section - Dark Pindora Purple/Orange theme */}
             <div className="bg-gradient-to-br from-purple-800/30 to-orange-700/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30">
               <h3 className="text-xl font-bold bg-gradient-to-r from-purple-200 to-orange-200 bg-clip-text text-transparent mb-6 text-center">
-                Connect your whitelisted Metamask wallet.
+                Connect your whitelisted wallet to mint.
               </h3>
               
               {claimCondition ? (
@@ -257,7 +267,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Connect Button - Updated with new configuration */}
+          {/* Connect Button - Updated with multi-wallet support */}
           <div className="backdrop-blur-md bg-gradient-to-r from-purple-800/30 to-orange-700/30 border border-purple-400/40 rounded-2xl p-4">
             <ConnectButton
               client={client}
@@ -265,7 +275,9 @@ export default function Home() {
               wallets={wallets}
               connectModal={{ 
                 showThirdwebBranding: false, 
-                size: "compact" 
+                size: "compact",
+                title: "Connect Your Wallet",
+                titleIcon: ""
               }}
             />
           </div>
